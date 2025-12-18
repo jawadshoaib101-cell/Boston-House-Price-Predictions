@@ -2,11 +2,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.tree import DecisionTreeRegressor
 
 # Splitting data
-df = pd.read_csv("Boston (1).csv").sample(frac=1)
+df = pd.read_csv("Boston (1).csv").sample(frac=1, random_state=42)
 train = df[:int(0.6*len(df))]
 test = df[int(0.6*len(df)):]
 
@@ -55,19 +56,22 @@ model.fit(poly_x_train, train_y)
 poly_x_test = poly_reg.transform(test_x)
 y_pred_poly = model.predict(poly_x_test)
 
+# Decision Tree Regressor
+decision_tree = DecisionTreeRegressor(max_depth=4)
+decision_tree.fit(train_x, train_y)
+y_pred_decision_tree = decision_tree.predict(test_x)
+
 # MSE and MAE
 ridge_mse = mean_squared_error(test_y, y_pred_ridge)
 linear_reg_mse = mean_squared_error(test_y, y_pred_linear_reg)
-ridge_mae = mean_absolute_error(test_y, y_pred_ridge)
-linear_reg_mae = mean_absolute_error(test_y, y_pred_linear_reg)
 lasso_reg_mse = mean_squared_error(test_y, y_pred_lasso)
-lasso_reg_mae = mean_absolute_error(test_y, y_pred_lasso)
 poly_reg_mse = mean_squared_error(test_y, y_pred_poly)
-poly_reg_mae = mean_absolute_error(test_y, y_pred_poly)
-print(f"The MSE for ridge regression: {ridge_mse}. \nThe MSE for linear regression: {linear_reg_mse}."
-      f"\nThe MSE for ridge regression: {ridge_mae}. \nThe MAE for linear regression: {linear_reg_mae}"
-      f"\nThe MSE for lasso regression: {lasso_reg_mse}. \nThe MAE for lasso regression: {lasso_reg_mae}"
-      f"\nThe MSE for polynomial regression: {poly_reg_mse}. \nThe MAE for polynomial regression: {poly_reg_mae}")
+decision_tree_mse = mean_squared_error(test_y, y_pred_decision_tree)
+print(f"The MSE for ridge regression: {ridge_mse}."
+      f"\nThe MSE for ridge regression: {ridge_mse}."
+      f"\nThe MSE for lasso regression: {lasso_reg_mse}."
+      f"\nThe MSE for polynomial regression: {poly_reg_mse}."
+      f"\nThe MSE for decision tree regression: {decision_tree_mse}.")
 
 # Graphing
 plt.figure(figsize=(8, 5))
