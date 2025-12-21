@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 # Splitting data
 df = pd.read_csv("Boston (1).csv").sample(frac=1, random_state=42)
@@ -61,17 +62,23 @@ decision_tree = DecisionTreeRegressor(max_depth=4)
 decision_tree.fit(train_x, train_y)
 y_pred_decision_tree = decision_tree.predict(test_x)
 
+# Random Forest Regressor
+rf_regression = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_regression.fit(train_x, train_y)
+y_pred_rf_regression = rf_regression.predict(test_x)
 # MSE and MAE
 ridge_mse = mean_squared_error(test_y, y_pred_ridge)
 linear_reg_mse = mean_squared_error(test_y, y_pred_linear_reg)
 lasso_reg_mse = mean_squared_error(test_y, y_pred_lasso)
 poly_reg_mse = mean_squared_error(test_y, y_pred_poly)
 decision_tree_mse = mean_squared_error(test_y, y_pred_decision_tree)
+rf_regression_mse = mean_squared_error(test_y, y_pred_rf_regression)
 print(f"The MSE for ridge regression: {ridge_mse}."
       f"\nThe MSE for ridge regression: {ridge_mse}."
       f"\nThe MSE for lasso regression: {lasso_reg_mse}."
       f"\nThe MSE for polynomial regression: {poly_reg_mse}."
-      f"\nThe MSE for decision tree regression: {decision_tree_mse}.")
+      f"\nThe MSE for decision tree regression: {decision_tree_mse}."
+      f"\nThe MSE for decision tree regression: {rf_regression_mse}.")
 
 # Graphing
 plt.figure(figsize=(8, 5))
